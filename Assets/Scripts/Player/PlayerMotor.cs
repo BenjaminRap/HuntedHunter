@@ -59,6 +59,8 @@ public class PlayerMotor : MonoBehaviour
 
     public void ProcessMove(Vector2 input)
     {
+        if (input.x != 0)
+            transform.right = Vector3.right * input.x;
         if (Vector3.Magnitude(rb.velocity) < 0.2f)
             currentSpeed = 0;
         if (physics.isGrounded)

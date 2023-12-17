@@ -17,6 +17,10 @@ public abstract class Level : MonoBehaviour
     private float               time;
     [SerializeField]
     private float               wakeUpTime;
+    [SerializeField]
+    private float               minShadowStart;
+    [SerializeField]
+    private float               minHeight;
     protected bool              start;
     private InputManager        input;
     private GameObject          currentLevel_object;
@@ -26,8 +30,11 @@ public abstract class Level : MonoBehaviour
     private Shadow              shadow;
     private int                 space_pressed;
     private List<PlayerData>    datas;
+    private Animator            anim;
 
     protected abstract void SecondStart();
+
+    protected abstract void SecondUpdate();
 
     protected abstract void WinAction();
 
@@ -47,6 +54,7 @@ public abstract class Level : MonoBehaviour
         input = player.GetComponent<InputManager>();
         blackScene = GameObject.Find("BlackScene").GetComponent<RawImage>();
         record = player.GetComponent<RecordMotion>();
+        anim = player.GetComponent<Animator>();
         player.transform.position = startPosition;
         player.transform.rotation = Quaternion.identity;
         input.SleepingInput();
@@ -58,6 +66,13 @@ public abstract class Level : MonoBehaviour
         SecondStart();
     }
 
+    void Update()
+    {
+        if (player.transform.position.y < minHeight)
+            StartCoroutine(Lose());
+        SecondUpdate();
+    }
+
     public void Space()
     {
         if (shadow == null)
@@ -67,16 +82,17 @@ public abstract class Level : MonoBehaviour
         }
         space_pressed++;
         shadow.MoveToIndex(space_pressed);
-        if (space_pressed * record.GetDelay() > wakeUpTime)
+        if (space_pressed * record.GetDelay() > wakeUpTime && Vector3.Distance(shadow.transform.position, player.transform.position) > minShadowStart)
             WakeUp();
     }
 
     public void WakeUp()
     {
+        start = true;
+        anim.SetTrigger("WakeUp");
         WakeUpAction();
         record.StartRecording();
         input.OnFootInput();
-        start = true;
         if (shadow != null)
             shadow.StartRun();
     }
@@ -91,10 +107,12 @@ public abstract class Level : MonoBehaviour
         GameObject  newLevel;
 
         Debug.Log("lost");
+        start = false;
         LoseAction();
+        anim.SetTrigger("Lose");
+        //yield return (new WaitForSeconds(1));
         record.EndRecording();
         record.GetDatas().Clear();
-        start = false;
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
         newLevel = Instantiate(currentLevel_object, Vector3.zero, Quaternion.identity);
@@ -109,10 +127,12 @@ public abstract class Level : MonoBehaviour
         GameObject  newLevel;
 
         Debug.Log("Win");
+        start = false;
         WinAction();
+        anim.SetTrigger("Win");
+        //yield return (new WaitForSeconds(1));
         record.EndRecording();
         datas = record.GetDatas();
-        start = false;
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
         newLevel = Instantiate(nextLevel_object, Vector3.zero, Quaternion.identity);

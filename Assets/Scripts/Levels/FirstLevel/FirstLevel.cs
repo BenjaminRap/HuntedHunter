@@ -32,7 +32,7 @@ public class FirstLevel : Level
 
     }
 
-    void Update()
+    protected override void SecondUpdate()
     {
         if (!start)
             return ;

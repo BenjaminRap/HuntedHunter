@@ -12,6 +12,7 @@ public class CameraControl : MonoBehaviour
     private float            moveSpeedY;
     [SerializeField]
     private float            moveSpeedX;
+    private GameObject       player;
     private float            XOffset;
     private float            YOffset;
 
@@ -19,6 +20,12 @@ public class CameraControl : MonoBehaviour
     {
         XOffset = transform.localPosition.x;
         YOffset = transform.localPosition.y;
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+    }
+
+    void Update()
+    {
+        transform.position = new Vector3(player.transform.position.x + XOffset, player.transform.position.y + YOffset, transform.position.z);
     }
 
     public void    MoveX(float distance)

@@ -9,6 +9,15 @@ public class RecordMotion : MonoBehaviour
     private float               delta;
     private bool                recording;
     private List<PlayerData>    datas;
+    private Rigidbody2D         rb;
+    private PlayerPhysics       player;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        player = GetComponent<PlayerPhysics>();
+        recording = false;
+    }
 
     public void StartRecording()
     {
@@ -24,9 +33,26 @@ public class RecordMotion : MonoBehaviour
 
     IEnumerator Record()
     {
+        string    anim;
+
+
         while (recording)
         {
-            datas.Add(new PlayerData("", transform.position, transform.rotation));
+            if (player.isGrounded)
+            {
+                if (rb.velocity.y >= 0)
+                    anim = "Jump";
+                else
+                    anim = "Fall";
+            }
+            else
+            {
+                if (Vector3.Magnitude(rb.velocity) == 0)
+                    anim = "Idle";
+                else
+                    anim = "Run";
+            }
+            datas.Add(new PlayerData(anim, transform.position, transform.rotation));
             yield return (new WaitForSeconds(delay));
         }
     }

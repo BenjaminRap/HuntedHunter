@@ -13,10 +13,12 @@ public class Shadow : MonoBehaviour
     private Coroutine           move;
     private int                 index;
     private Level               level;
+    private Animator            anim;
 
     void    Start()
     {
         level = GameObject.FindGameObjectsWithTag("Levels")[0].GetComponent<Level>();
+        anim = GetComponent<Animator>();
         index = 0;
         active = false;
     }
@@ -42,7 +44,10 @@ public class Shadow : MonoBehaviour
             return ;
         }
         if (move == null)
+        {
+            anim.SetTrigger(datas[index].animation);
             move = StartCoroutine(Move());
+        }
     }
 
     private IEnumerator Move()
@@ -63,6 +68,7 @@ public class Shadow : MonoBehaviour
 
     public void MoveToIndex(int index)
     {
+        Debug.Log(datas[index].position);
         if (index >= datas.Count)
             return ;
         transform.position = datas[index].position;
