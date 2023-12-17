@@ -38,8 +38,7 @@ public class Shadow : MonoBehaviour
             return ;
         if (index >= datas.Count - 1)
         {
-            level.Lose();
-            Destroy(this.transform.gameObject);
+            StartCoroutine(level.Lose());
             return ;
         }
         if (move == null)
@@ -64,6 +63,8 @@ public class Shadow : MonoBehaviour
 
     public void MoveToIndex(int index)
     {
+        if (index >= datas.Count)
+            return ;
         transform.position = datas[index].position;
         transform.rotation = datas[index].rotation;
         this.index = index;

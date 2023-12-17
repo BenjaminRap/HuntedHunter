@@ -595,8 +595,8 @@ MonoBehaviour:
   time: 1
   wakeUpTime: 1
   wall: {fileID: 3229122356767954808}
-  maxSpeed: 0
-  speedAcceleration: 0
+  maxSpeed: 3
+  speedAcceleration: 2
 --- !u!1 &3229122357557961930
 GameObject:
   m_ObjectHideFlags: 0

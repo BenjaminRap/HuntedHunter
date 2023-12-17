@@ -5,8 +5,11 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    private PlayerMotor motor;
-    PlayerInputActions   input;
+    private PlayerMotor          motor;
+    private PlayerInputActions   input;
+    [SerializeField]
+    private CameraControl        cam;
+    private bool                 shift;
 
     private void    Awake()
     {
@@ -14,8 +17,20 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         input.OnFoot.Enable();
         input.Sleeping.WakeUp.performed += WakeUp;
+        input.OnFoot.Shift.started += EnableShift;
+        input.OnFoot.Shift.canceled += DisableShift;
         input.OnFoot.Jump.started += JumpStart;
         input.OnFoot.Jump.canceled += JumpEnd;
+    }
+
+    public void EnableShift(InputAction.CallbackContext context)
+    {
+        shift = true;
+    }
+
+    public void DisableShift(InputAction.CallbackContext context)
+    {
+        shift = false;
     }
 
     public void OnFootInput()
@@ -50,6 +65,14 @@ public class InputManager : MonoBehaviour
         Vector2 move_input;
 
         move_input = input.OnFoot.Movement.ReadValue<Vector2>();
-        motor.ProcessMove(move_input);
+        if (!shift)
+            motor.ProcessMove(move_input);
+        else
+        {
+            if (move_input.x != 0)
+                cam.MoveX(move_input.x);
+            if (move_input.y != 0)
+                cam.MoveY(move_input.y);
+        }
     }
 }

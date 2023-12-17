@@ -11,10 +11,15 @@ public class PlayerPhysics : MonoBehaviour
     private float           groundedDistance;
     [SerializeField]
     private float           groundedDuration;
+    [SerializeField]
+    private float           bodyWidth;
+    [SerializeField]
+    private float           bodyHeight;
     private RaycastHit2D    ground;
     public bool             isGrounded;
     private float           inAirTime;
     private Rigidbody2D     rb;
+
 
     void    Start()
     {
@@ -38,10 +43,12 @@ public class PlayerPhysics : MonoBehaviour
 
     private bool    IsGrounded()
     {
-        RaycastHit2D    hit;
+        RaycastHit2D    hit1;
+        RaycastHit2D    hit2;
 
-        hit = Physics2D.Raycast(transform.position, -Vector2.up, groundedDistance);
-        if (hit.collider == null)
+        hit1 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 + Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
+        hit2 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 - Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
+        if (hit1.collider == null && hit2.collider == null)
         {
             if (inAirTime > groundedDuration)
                 return (false);
@@ -49,7 +56,10 @@ public class PlayerPhysics : MonoBehaviour
         }
         else
             inAirTime = 0;
-        ground = hit;
+        if (hit1.collider == null)
+            ground = hit2;
+        else
+            ground = hit1;
         return (true);
     }
 

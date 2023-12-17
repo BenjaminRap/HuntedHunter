@@ -5,26 +5,27 @@ using UnityEngine.UI;
 
 public abstract class Level : MonoBehaviour
 {
-    protected GameObject    player;
+    protected GameObject        player;
     [SerializeField]
-    private Vector3         startPosition;
-    private RawImage        blackScene;
+    private Vector3             startPosition;
+    private RawImage            blackScene;
     [SerializeField]
-    private string          currentLevel;
+    private string              currentLevel;
     [SerializeField]
-    private string          nextLevel;
+    private string              nextLevel;
     [SerializeField]
-    private float           time;
+    private float               time;
     [SerializeField]
-    private float           wakeUpTime;
-    protected bool          start;
-    private InputManager    input;
-    private GameObject      currentLevel_object;
-    private GameObject      nextLevel_object;
-    private GameObject      shadow_prefab;
-    private RecordMotion    record;
-    private Shadow          shadow;
-    private int             space_pressed;
+    private float               wakeUpTime;
+    protected bool              start;
+    private InputManager        input;
+    private GameObject          currentLevel_object;
+    private GameObject          nextLevel_object;
+    private GameObject          shadow_prefab;
+    private RecordMotion        record;
+    private Shadow              shadow;
+    private int                 space_pressed;
+    private List<PlayerData>    datas;
 
     protected abstract void SecondStart();
 
@@ -87,24 +88,37 @@ public abstract class Level : MonoBehaviour
 
     public IEnumerator  Lose()
     {
+        GameObject  newLevel;
+
+        Debug.Log("lost");
         LoseAction();
         record.EndRecording();
         record.GetDatas().Clear();
         start = false;
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
-        Instantiate(currentLevel_object, Vector3.zero, Quaternion.identity);
+        newLevel = Instantiate(currentLevel_object, Vector3.zero, Quaternion.identity);
+        newLevel.GetComponent<Level>().SetDatas(datas);
+        if (shadow != null)
+            Destroy(shadow.transform.gameObject);
         Destroy(this.gameObject);
     }
 
     public IEnumerator  Win()
     {
+        GameObject  newLevel;
+
+        Debug.Log("Win");
         WinAction();
         record.EndRecording();
+        datas = record.GetDatas();
         start = false;
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
-        Instantiate(nextLevel_object, Vector3.zero, Quaternion.identity);
+        newLevel = Instantiate(nextLevel_object, Vector3.zero, Quaternion.identity);
+        newLevel.GetComponent<Level>().SetDatas(datas);
+        if (shadow != null)
+            Destroy(shadow.transform.gameObject);
         Destroy(this.gameObject);
     }
 
@@ -124,12 +138,10 @@ public abstract class Level : MonoBehaviour
     private Shadow  SpawnShadow()
     {
         RecordMotion        record;
-        List<PlayerData>    datas;
         GameObject          shadow_instance;
 
         shadow_instance = null;
         record = player.GetComponent<RecordMotion>();
-        datas = record.GetDatas();
         if (datas != null && datas.Count != 0)
         {
             shadow_instance = Instantiate(shadow_prefab, datas[0].position, datas[0].rotation);
@@ -143,5 +155,15 @@ public abstract class Level : MonoBehaviour
     public bool HasStarted()
     {
         return (start);
+    }
+
+    public float GetFadeTime()
+    {
+        return (time);
+    }
+
+    public void SetDatas(List<PlayerData> datas)
+    {
+        this.datas = datas;
     }
 }

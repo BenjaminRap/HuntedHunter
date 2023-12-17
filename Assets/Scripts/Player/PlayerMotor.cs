@@ -19,12 +19,18 @@ public class PlayerMotor : MonoBehaviour
     private float           space_duration;
     [SerializeField]
     private int             jump_bonus;
+    [SerializeField]
+    private float           downForce;
+    [SerializeField]
+    private float           speedAcceleration;
     private bool            space_pressed;
+    private float           currentSpeed;
 
     void    Start()
     {
         rb = GetComponent<Rigidbody2D>();
         physics = GetComponent<PlayerPhysics>();
+        currentSpeed = 0;
     }
 
     public IEnumerator  JumpStart()
@@ -53,9 +59,17 @@ public class PlayerMotor : MonoBehaviour
 
     public void ProcessMove(Vector2 input)
     {
+        if (Vector3.Magnitude(rb.velocity) < 0.2f)
+            currentSpeed = 0;
         if (physics.isGrounded)
-            rb.velocity = new Vector2(input.x * speed, rb.velocity.y);
+        {
+            if (currentSpeed < speed)
+                currentSpeed += speedAcceleration * Time.deltaTime;
+            rb.velocity = new Vector2(input.x * currentSpeed, rb.velocity.y);
+        }
         else if (Mathf.Abs(rb.velocity.x) < maxSpeed || Mathf.Sign(input.x) != Mathf.Sign(rb.velocity.x))
             rb.AddForce(new Vector2(input.x, 0) * airAcceleration * Time.deltaTime);
+        if (input.y < 0)
+            rb.AddForce(Vector2.down * downForce * Time.deltaTime);
     }
 }
