@@ -16,7 +16,7 @@ public class LocateShadow : MonoBehaviour
     void    Start()
     {
         level = null;
-        width = arrow.GetComponent<SpriteRenderer>().sprite.rect.width / 4;
+        width = arrow.GetComponent<SpriteRenderer>().sprite.rect.width / 2;
     }
     public void Locate(Level level, GameObject shadow, GameObject player)
     {
@@ -46,7 +46,7 @@ public class LocateShadow : MonoBehaviour
                     screenPosition.x = 0 + width;
                 arrow.transform.position = cam.ScreenToWorldPoint(screenPosition);
                 arrow.transform.position = new Vector3(arrow.transform.position.x, arrow.transform.position.y, 0f);
-                arrow.transform.right = shadow.transform.position - player.transform.position;
+                arrow.transform.up = shadow.transform.position - player.transform.position;
             }
             else if (arrow.activeSelf == true)
                 arrow.SetActive(false);

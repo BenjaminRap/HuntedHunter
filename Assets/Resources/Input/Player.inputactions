@@ -51,9 +51,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "mouseRight",
+                    "name": "GiveUp",
                     "type": "Button",
-                    "id": "5bb52bbf-965d-4185-87ac-1c6500b3847e",
+                    "id": "e7344d2c-c158-4da6-8259-cd3ed997d8bc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -162,12 +162,12 @@
                 },
                 {
                     "name": "",
-                    "id": "aee381f9-d90e-4722-9a4d-a47fb9c7470b",
-                    "path": "<Mouse>/rightButton",
+                    "id": "8a22690c-6ef1-410f-98fd-4ecedacd4970",
+                    "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "mouseRight",
+                    "action": "GiveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -24,9 +24,22 @@ public class InputManager : MonoBehaviour
         input.OnFoot.Jump.started += JumpStart;
         input.OnFoot.Jump.canceled += JumpEnd;
         input.OnFoot.mouseLeft.performed += Dash;
+        input.OnFoot.GiveUp.performed += GiveUp;
     }
 
-    public void Dash(InputAction.CallbackContext context)
+    void    GiveUp(InputAction.CallbackContext context)
+    {
+        Level   level;
+
+        level = GameObject.FindGameObjectsWithTag("Levels")[0].GetComponent<Level>();
+        if (level.HasStarted())
+        {
+            Debug.Log("Give up");
+            StartCoroutine(level.Lose());
+        }
+    }
+
+    void    Dash(InputAction.CallbackContext context)
     {
         StartCoroutine(power.Dash());
     }
