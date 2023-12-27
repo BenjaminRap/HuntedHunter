@@ -42,8 +42,6 @@ public class PlayerPhysics : MonoBehaviour
         RaycastHit2D    hit1;
         RaycastHit2D    hit2;
 
-        hit1 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 + Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
-        hit2 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 - Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
         if (hit1.collider == null && hit2.collider == null)
             return (false);
         if (hit1.collider == null)
