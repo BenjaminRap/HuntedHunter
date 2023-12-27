@@ -62,6 +62,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouseLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""3c5ae241-eb77-4268-ac13-4e64d0ac1226"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouseRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""5bb52bbf-965d-4185-87ac-1c6500b3847e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +170,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Shift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cde2d282-9482-4209-be37-8ee9c416e4b2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouseLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aee381f9-d90e-4722-9a4d-a47fb9c7470b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouseRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -212,6 +252,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_OnFoot_Interact = m_OnFoot.FindAction("Interact", throwIfNotFound: true);
         m_OnFoot_Movement = m_OnFoot.FindAction("Movement", throwIfNotFound: true);
         m_OnFoot_Shift = m_OnFoot.FindAction("Shift", throwIfNotFound: true);
+        m_OnFoot_mouseLeft = m_OnFoot.FindAction("mouseLeft", throwIfNotFound: true);
+        m_OnFoot_mouseRight = m_OnFoot.FindAction("mouseRight", throwIfNotFound: true);
         // Sleeping
         m_Sleeping = asset.FindActionMap("Sleeping", throwIfNotFound: true);
         m_Sleeping_WakeUp = m_Sleeping.FindAction("WakeUp", throwIfNotFound: true);
@@ -281,6 +323,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Interact;
     private readonly InputAction m_OnFoot_Movement;
     private readonly InputAction m_OnFoot_Shift;
+    private readonly InputAction m_OnFoot_mouseLeft;
+    private readonly InputAction m_OnFoot_mouseRight;
     public struct OnFootActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -289,6 +333,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_OnFoot_Interact;
         public InputAction @Movement => m_Wrapper.m_OnFoot_Movement;
         public InputAction @Shift => m_Wrapper.m_OnFoot_Shift;
+        public InputAction @mouseLeft => m_Wrapper.m_OnFoot_mouseLeft;
+        public InputAction @mouseRight => m_Wrapper.m_OnFoot_mouseRight;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -310,6 +356,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
+            @mouseLeft.started += instance.OnMouseLeft;
+            @mouseLeft.performed += instance.OnMouseLeft;
+            @mouseLeft.canceled += instance.OnMouseLeft;
+            @mouseRight.started += instance.OnMouseRight;
+            @mouseRight.performed += instance.OnMouseRight;
+            @mouseRight.canceled += instance.OnMouseRight;
         }
 
         private void UnregisterCallbacks(IOnFootActions instance)
@@ -326,6 +378,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
+            @mouseLeft.started -= instance.OnMouseLeft;
+            @mouseLeft.performed -= instance.OnMouseLeft;
+            @mouseLeft.canceled -= instance.OnMouseLeft;
+            @mouseRight.started -= instance.OnMouseRight;
+            @mouseRight.performed -= instance.OnMouseRight;
+            @mouseRight.canceled -= instance.OnMouseRight;
         }
 
         public void RemoveCallbacks(IOnFootActions instance)
@@ -403,6 +461,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+        void OnMouseLeft(InputAction.CallbackContext context);
+        void OnMouseRight(InputAction.CallbackContext context);
     }
     public interface ISleepingActions
     {

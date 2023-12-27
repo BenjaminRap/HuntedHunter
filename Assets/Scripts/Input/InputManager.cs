@@ -23,6 +23,12 @@ public class InputManager : MonoBehaviour
         input.OnFoot.Shift.canceled += DisableShift;
         input.OnFoot.Jump.started += JumpStart;
         input.OnFoot.Jump.canceled += JumpEnd;
+        input.OnFoot.mouseLeft.performed += Dash;
+    }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        StartCoroutine(power.Dash());
     }
 
     public void EnableShift(InputAction.CallbackContext context)
@@ -55,7 +61,6 @@ public class InputManager : MonoBehaviour
     private void    JumpStart(InputAction.CallbackContext context)
     {
         StartCoroutine(motor.JumpStart());
-        StartCoroutine(power.Dash());
     }
 
     private void    JumpEnd(InputAction.CallbackContext context)
