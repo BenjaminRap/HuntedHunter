@@ -1516,13 +1516,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPosition: {x: -332.5, y: -121.8, z: 0}
   currentLevel: FIrstLevel
-  nextLevel: FIrstLevel
+  nextLevel: SecondLevel
   time: 1
   wakeUpTime: 1
   minShadowStart: 3
   minHeight: -125
   wall: {fileID: 8050568100697316733}
-  maxSpeed: 3
+  maxSpeed: 1
   speedAcceleration: 2
 --- !u!1 &8050568100471188199
 GameObject:
