@@ -57,6 +57,8 @@ public abstract class Level : MonoBehaviour
         anim = player.GetComponent<Animator>();
         player.transform.position = startPosition;
         player.transform.rotation = Quaternion.identity;
+        player.GetComponent<PlayerPhysics>().SetVelocity(Vector3.zero);
+        player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         input.SleepingInput();
         currentLevel_object = Resources.Load("Levels/" + currentLevel) as GameObject;
         nextLevel_object = Resources.Load("Levels/" + nextLevel) as GameObject;
