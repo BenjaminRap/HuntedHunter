@@ -191,6 +191,7 @@ public abstract class Level : MonoBehaviour
             shadow_instance = Instantiate(shadow_prefab, datas[0].position, datas[0].rotation);
             shadow_instance.GetComponent<Shadow>().Init(datas, record.GetDelay());
             shadow_instance.transform.parent = transform;
+            GameObject.Find("Canvas").GetComponent<LocateShadow>().Locate(this, shadow_instance, player);
         }
         else
             return (null);
