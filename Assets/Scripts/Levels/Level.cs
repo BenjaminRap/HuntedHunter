@@ -26,6 +26,7 @@ public abstract class Level : MonoBehaviour
     private GameObject          currentLevel_object;
     private GameObject          nextLevel_object;
     private GameObject          shadow_prefab;
+    private GameObject          hand;
     private RecordMotion        record;
     private Shadow              shadow;
     private int                 space_pressed;
@@ -53,12 +54,12 @@ public abstract class Level : MonoBehaviour
         space_pressed = 0;
         input = player.GetComponent<InputManager>();
         blackScene = GameObject.Find("BlackScene").GetComponent<RawImage>();
+        hand = GameObject.Find("Hand");
+        hand.SetActive(false);
         record = player.GetComponent<RecordMotion>();
         anim = player.GetComponent<Animator>();
         player.transform.position = startPosition;
         player.transform.rotation = Quaternion.identity;
-        player.GetComponent<PlayerPhysics>().SetVelocity(Vector3.zero);
-        player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         input.SleepingInput();
         currentLevel_object = Resources.Load("Levels/" + currentLevel) as GameObject;
         nextLevel_object = Resources.Load("Levels/" + nextLevel) as GameObject;
@@ -71,7 +72,10 @@ public abstract class Level : MonoBehaviour
     void Update()
     {
         if (player.transform.position.y < minHeight)
+        {
+            Debug.Log("fell into the void");
             StartCoroutine(Lose());
+        }
         SecondUpdate();
     }
 
@@ -99,6 +103,21 @@ public abstract class Level : MonoBehaviour
             shadow.StartRun();
     }
 
+    private IEnumerator HandCatch()
+    {
+        float   time;
+
+        time = 0f;
+        hand.SetActive(true);
+        while (time < 1.5f)
+        {
+            hand.transform.position = player.transform.position + new Vector3(15f, 15f, 0f);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        hand.SetActive(false);
+    }
+
     public GameObject   GetPlayer()
     {
         return (player);
@@ -112,11 +131,11 @@ public abstract class Level : MonoBehaviour
         start = false;
         LoseAction();
         anim.SetTrigger("Lose");
-        //yield return (new WaitForSeconds(1));
         record.EndRecording();
         record.GetDatas().Clear();
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
+        hand.SetActive(true);
         newLevel = Instantiate(currentLevel_object, Vector3.zero, Quaternion.identity);
         newLevel.GetComponent<Level>().SetDatas(datas);
         if (shadow != null)
@@ -131,12 +150,15 @@ public abstract class Level : MonoBehaviour
         Debug.Log("Win");
         start = false;
         WinAction();
+        StartCoroutine(HandCatch());
+        yield return (new WaitForSeconds(0.7f));
         anim.SetTrigger("Win");
-        //yield return (new WaitForSeconds(1));
+        yield return (new WaitForSeconds(1.5f));
         record.EndRecording();
         datas = record.GetDatas();
         StartCoroutine(Fade(1, 255, time));
         yield return (new WaitForSeconds(time));
+        hand.SetActive(true);
         newLevel = Instantiate(nextLevel_object, Vector3.zero, Quaternion.identity);
         newLevel.GetComponent<Level>().SetDatas(datas);
         if (shadow != null)
@@ -168,6 +190,7 @@ public abstract class Level : MonoBehaviour
         {
             shadow_instance = Instantiate(shadow_prefab, datas[0].position, datas[0].rotation);
             shadow_instance.GetComponent<Shadow>().Init(datas, record.GetDelay());
+            shadow_instance.transform.parent = transform;
         }
         else
             return (null);

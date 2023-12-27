@@ -74,4 +74,9 @@ public class PlayerMotor : MonoBehaviour
         if (input.y < 0)
             rb.AddForce(Vector2.down * downForce * Time.deltaTime);
     }
+
+    public float    GetSpeed()
+    {
+        return (currentSpeed);
+    }
 }

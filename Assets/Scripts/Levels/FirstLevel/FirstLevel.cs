@@ -39,7 +39,5 @@ public class FirstLevel : Level
         if (wallSpeed < maxSpeed)
             wallSpeed += speedAcceleration * Time.deltaTime;
         wall.transform.position += Vector3.right * wallSpeed * Time.deltaTime;
-        if (player.transform.position.x - wall.transform.position.x < wall.transform.localScale.x / 2)
-            StartCoroutine(Lose());
     }
 }

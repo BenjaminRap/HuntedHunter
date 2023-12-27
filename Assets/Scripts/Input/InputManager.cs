@@ -5,16 +5,18 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    private PlayerMotor          motor;
-    private PlayerInputActions   input;
+    private PlayerMotor         motor;
+    private PlayerInputActions  input;
     [SerializeField]
-    private CameraControl        cam;
-    private bool                 shift;
+    private CameraControl       cam;
+    private bool                shift;
+    private PlayerPower         power;
 
     private void    Awake()
     {
         input = new PlayerInputActions();
         motor = GetComponent<PlayerMotor>();
+        power = GetComponent<PlayerPower>();
         input.OnFoot.Enable();
         input.Sleeping.WakeUp.performed += WakeUp;
         input.OnFoot.Shift.started += EnableShift;
@@ -53,6 +55,7 @@ public class InputManager : MonoBehaviour
     private void    JumpStart(InputAction.CallbackContext context)
     {
         StartCoroutine(motor.JumpStart());
+        StartCoroutine(power.Dash());
     }
 
     private void    JumpEnd(InputAction.CallbackContext context)

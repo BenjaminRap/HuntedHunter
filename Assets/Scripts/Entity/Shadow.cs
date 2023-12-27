@@ -36,10 +36,11 @@ public class Shadow : MonoBehaviour
 
     void    Update()
     {
-        if (!active)
+        if (!active || !level.HasStarted())
             return ;
         if (index >= datas.Count - 1)
         {
+            Debug.Log("shadow reached the end");
             StartCoroutine(level.Lose());
             return ;
         }
@@ -68,7 +69,6 @@ public class Shadow : MonoBehaviour
 
     public void MoveToIndex(int index)
     {
-        Debug.Log(datas[index].position);
         if (index >= datas.Count)
             return ;
         transform.position = datas[index].position;

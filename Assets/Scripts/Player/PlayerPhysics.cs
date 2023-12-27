@@ -10,21 +10,17 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField]
     private float           groundedDistance;
     [SerializeField]
-    private float           groundedDuration;
-    [SerializeField]
     private float           bodyWidth;
     [SerializeField]
     private float           bodyHeight;
     private RaycastHit2D    ground;
     public bool             isGrounded;
-    private float           inAirTime;
     private Rigidbody2D     rb;
 
 
     void    Start()
     {
         velocity = Vector2.zero;
-        inAirTime = 0;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -49,13 +45,7 @@ public class PlayerPhysics : MonoBehaviour
         hit1 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 + Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
         hit2 = Physics2D.Raycast(transform.position + Vector3.down * bodyHeight / 2 - Vector3.right * Mathf.Sign(rb.velocity.x) * bodyWidth / 2, -Vector2.up, groundedDistance);
         if (hit1.collider == null && hit2.collider == null)
-        {
-            if (inAirTime > groundedDuration)
-                return (false);
-            inAirTime += Time.deltaTime;
-        }
-        else
-            inAirTime = 0;
+            return (false);
         if (hit1.collider == null)
             ground = hit2;
         else
@@ -66,10 +56,11 @@ public class PlayerPhysics : MonoBehaviour
     public void SetVelocity(Vector2 velocity)
     {
         this.velocity = velocity;
+        rb.velocity = velocity;
     }
 
     public Vector2  GetVelocity()
     {
-        return (velocity);
+        return (rb.velocity);
     }
 }
